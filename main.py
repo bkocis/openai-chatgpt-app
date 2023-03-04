@@ -26,9 +26,10 @@ def update_div(attrname, old, new):
 
     messages.append({"role": "assistant", "content": reply})
 
-    div.text += f"<br>Q: {new}"
-    div.text += f"<br>A: {reply}"
-    text_input.value = ""
+    if new != "":
+        div.text += f"<br>Q: {new}"
+        div.text += f"<br>A: {reply}"
+        text_input.value = ""
 
 
 # Attach the callback function to the text input widget
