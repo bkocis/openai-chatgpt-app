@@ -2,13 +2,19 @@ import openai
 import logging
 from bokeh.layouts import column
 from bokeh.plotting import curdoc
-from bokeh.models.widgets import TextInput, Div, Paragraph
+from bokeh.models.widgets import TextInput, Div, Paragraph, PreText
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
 text_input = TextInput(title="Ask me a question", width=700, prefix="😋") #, sizing_mode='stretch_height')
 messages = [{"role": "system",
              "content": "You are a helpful assistant."}]
+
+
+def format_reply(reply):
+    reply = reply.replace("```", '<pre><code class="python">', 1)
+    reply = reply.replace("```", "</code></pre>", 1)
+    return reply
 
 
 def update_div(attrname, old, new):
@@ -28,7 +34,7 @@ def update_div(attrname, old, new):
 
     if new != "":
         div.text += f"<br>Q: {new}"
-        div.text += f"<br>A: {reply}"
+        div.text += f"<br>A: {format_reply(reply)}"
         text_input.value = ""
 
 
