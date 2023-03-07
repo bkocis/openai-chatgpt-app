@@ -2,11 +2,11 @@ import openai
 import logging
 from bokeh.layouts import column
 from bokeh.plotting import curdoc
-from bokeh.models.widgets import TextInput, Div, Paragraph, PreText
+from bokeh.models.widgets import TextInput, Div
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
-text_input = TextInput(title="Ask me a question", width=700, prefix="😋") #, sizing_mode='stretch_height')
+text_input = TextInput(title="Ask me a question", width=700, prefix="😋")
 messages = [{"role": "system",
              "content": "You are a helpful assistant."}]
 
