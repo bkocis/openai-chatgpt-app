@@ -21,6 +21,8 @@ deploy:
 	pytest
 	docker run -dit -p 8081:8081 openai-chatgpt-app
 git_push:
+	flake8
+	pytest
 	git add .
 	git commit -m "update"
 	git push
