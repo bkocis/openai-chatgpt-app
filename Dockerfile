@@ -19,4 +19,4 @@ ENV PYTHONPATH /opt
 WORKDIR /opt
 EXPOSE 8081
 
-CMD ["bokeh", "serve", "--show", "main.py", "--port", "8080"]
+CMD ["bokeh", "serve", "--show", "main.py", "--port", "8081"]

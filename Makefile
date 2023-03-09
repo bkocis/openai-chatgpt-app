@@ -15,8 +15,12 @@ build:
 	fi
 	docker build --tag=openai-chatgpt-app --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} .
 run_local:
-	docker run -p 8080:8080 openai-chatgpt-app
+	docker run -p 8081:8081 openai-chatgpt-app
 deploy:
 	flake8
 	pytest
-	docker run -dit -p 8080:8080 openai-chatgpt-app
+	docker run -dit -p 8081:8081 openai-chatgpt-app
+git_push:
+	git add .
+	git commit -m "update"
+	git push
