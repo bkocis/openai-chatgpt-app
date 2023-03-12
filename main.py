@@ -1,5 +1,6 @@
 import openai
 import logging
+import time
 from bokeh.layouts import column, row
 from bokeh.plotting import curdoc
 from bokeh.models.widgets import TextInput, Div, Button
@@ -9,6 +10,18 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 text_input = TextInput(width=900, prefix="😋")
 messages = [{"role": "system",
              "content": "You are a helpful assistant."}]
+
+
+def timeit(method):
+    def timed(*args, **kw):
+        ts = time.time()
+        reply, messages = method(*args, **kw)
+        te = time.time()
+        timing = te - ts
+        logging.info(f"{method.__name__}  {te - ts} sec")
+        print(f"{timing} sec")
+        return reply, messages, timing
+    return timed
 
 
 def format_reply(reply):
@@ -25,8 +38,8 @@ def message_counter(messages):
     return question_count
 
 
-def update_div(attrname, old, new):
-    # Update the text in the div with the new input value
+@timeit
+def call_openai(new):
     messages.append(
         {"role": "user", "content": new},
     )
@@ -35,6 +48,12 @@ def update_div(attrname, old, new):
         messages=messages
     )
     reply = chat_completion.choices[0].message.content
+    return reply, messages
+
+
+def update_div(attrname, old, new):
+    reply, messages, timing = call_openai(new)
+
     logging.info(f"A: {reply}")
     print(f"A: {reply}")
     message_count = message_counter(messages)
@@ -46,10 +65,12 @@ def update_div(attrname, old, new):
         # div_Q.text += f"<br>{new}"
         div.text += f"<br><dd>{format_reply(reply)}</dd>"
         # div_A.text += f"<br>{format_reply(reply)}"
-        div.text += "<hr>"
+
         text_input.value = ""
         # div.styles = {'background': '#222221'}
         div.styles = {'background': '#111111'}
+        div.text += f"<br>{timing}"
+        div.text += "<hr>"
 
 
 def clear_input_filed(attrname, old, new):
@@ -88,7 +109,8 @@ div_A = Div(width=550,
                     'background': '#0a0a0a'})
 
 layout = column(div,
-                row(div_Q, div_A, align="end"),
-                column(text_input, button, align="end"),
+                row(div_Q, div_A, align="start"),
+                column(text_input, button, align="start"),
                 )
 curdoc().add_root(layout)
+curdoc().title = "openai-chatgpt-app"
