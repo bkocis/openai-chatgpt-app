@@ -17,6 +17,14 @@ def format_reply(reply):
     return reply
 
 
+def message_counter(messages):
+    question_count = 0
+    for message in messages:
+        if message["role"] == "user" and message["content"] != "":
+            question_count += 1
+    return question_count
+
+
 def update_div(attrname, old, new):
     # Update the text in the div with the new input value
     messages.append(
@@ -27,19 +35,21 @@ def update_div(attrname, old, new):
         messages=messages
     )
     reply = chat_completion.choices[0].message.content
-    # logging.info(f"A: {reply}")
+    logging.info(f"A: {reply}")
     print(f"A: {reply}")
+    message_count = message_counter(messages)
 
     messages.append({"role": "assistant", "content": reply})
 
     if new != "":
-        div.text += f"<br>Q: {new}"
-        div_Q.text += f"{new}"
-        div.text += f"<br>A: {format_reply(reply)}"
-        div_A.text += f"{format_reply(reply)}"
+        div.text += f"<br>Q{message_count}: {new}"
+        # div_Q.text += f"<br>{new}"
+        div.text += f"<br><dd>{format_reply(reply)}</dd>"
+        # div_A.text += f"<br>{format_reply(reply)}"
         div.text += "<hr>"
         text_input.value = ""
-        div.styles = {'background': '#222221'}
+        # div.styles = {'background': '#222221'}
+        div.styles = {'background': '#111111'}
 
 
 def clear_input_filed(attrname, old, new):
@@ -78,6 +88,7 @@ div_A = Div(width=550,
                     'background': '#0a0a0a'})
 
 layout = column(div,
+                row(div_Q, div_A, align="end"),
                 column(text_input, button, align="end"),
-                row(div_Q, div_A, align="end"))
+                )
 curdoc().add_root(layout)

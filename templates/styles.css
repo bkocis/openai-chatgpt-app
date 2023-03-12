@@ -56,3 +56,7 @@ p {
     text-align: center;
     text-justify: inter-word;
 }
+hr-simple {
+  border: 10px solid green;
+  border-radius: 5px;
+}
