@@ -2,11 +2,11 @@ import openai
 import logging
 from bokeh.layouts import column
 from bokeh.plotting import curdoc
-from bokeh.models.widgets import TextInput, Div
+from bokeh.models.widgets import TextInput, Div, Button
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
 
-text_input = TextInput(title="Ask me a question", width=700, prefix="😋")
+text_input = TextInput(width=900, prefix="😋")
 messages = [{"role": "system",
              "content": "You are a helpful assistant."}]
 
@@ -38,10 +38,23 @@ def update_div(attrname, old, new):
         text_input.value = ""
 
 
+def clear_input_filed(attrname, old, new):
+    text_input.disabled = True
+
+
+def new_chat_button():
+    messages.clear()
+    messages.append({"role": "system", "content": "You are a helpful assistant."})
+    div.text = ""
+
+
+button = Button(label="New Chat", button_type="success")
+
 # Attach the callback function to the text input widget
 text_input.on_change("value", update_div)
+button.on_click(new_chat_button)
 
 div = Div(text=f"{text_input.value}", styles={'font-size': '100%', 'color': 'blue'})
 
-layout = column(div, text_input)
+layout = column(div, column(text_input, button, align="end"))
 curdoc().add_root(layout)

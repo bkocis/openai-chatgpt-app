@@ -5,18 +5,21 @@ ENV OPENAI_API_KEY $OPENAI_API_KEY
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-COPY ./main.py /opt/main.py
-COPY ./requirements.txt /opt/requirements.txt
+RUN mkdir /opt/openai-chatgpt-app
+
+COPY ./templates /opt/openai-chatgpt-app/templates
+COPY ./main.py /opt/openai-chatgpt-app/main.py
+COPY ./requirements.txt /opt/openai-chatgpt-app/requirements.txt
 
 RUN apt-get update
 RUN apt-get install python3-dev -y
 
 RUN pip install --upgrade pip && \
     pip install setuptools wheel && \
-    pip install -r /opt/requirements.txt
+    pip install -r /opt/openai-chatgpt-app/requirements.txt
 
 ENV PYTHONPATH /opt
 WORKDIR /opt
 EXPOSE 8081
 
-CMD ["bokeh", "serve", "--show", "main.py", "--port", "8081"]
+CMD ["bokeh", "serve", "openai-chatgpt-app", "--port", "8081", "--show"]

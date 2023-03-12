@@ -1,0 +1,28 @@
+{% extends base %}
+
+{% block title %}Thank You!{% endblock %}
+
+{% block postamble %}
+  <style>
+    {% include 'styles.css' %}
+  </style>
+{% endblock %}
+
+{% block contents %}
+  <div class="content">
+	<hr>
+	<a href="https://www.balazskocsis.de">
+        <img src="https://dallery.gallery/wp-content/uploads/2022/08/spacef_large_summer_lake_panorama_mountains_5bdcade0-1a3f-43ac-b678-8634912c99ab.png.webp" alt="header" border="0" width="900"></a>
+	<hr>
+    <h2>
+
+	<p> Answers on this page are generated using the chatbot API provided by OpenAI's ChatGPT. <p>
+	<br>
+    </h2>
+
+  </div>
+    {{ super() }}
+	
+  
+
+{% endblock %}
