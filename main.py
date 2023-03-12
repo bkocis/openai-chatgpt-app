@@ -1,13 +1,11 @@
+import time
 import openai
 import logging
-import time
 from bokeh.layouts import column, row
 from bokeh.plotting import curdoc
 from bokeh.models.widgets import TextInput, Div, Button
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.INFO)
-
-text_input = TextInput(width=900, prefix="😋")
 messages = [{"role": "system",
              "content": "You are a helpful assistant."}]
 
@@ -67,7 +65,6 @@ def update_div(attrname, old, new):
         # div_A.text += f"<br>{format_reply(reply)}"
 
         text_input.value = ""
-        # div.styles = {'background': '#222221'}
         div.styles = {'background': '#111111'}
         div.text += f"<br>{timing}"
         div.text += "<hr>"
@@ -83,34 +80,36 @@ def new_chat_button():
     div.text = ""
 
 
+# List of widgets
+text_input = TextInput(width=900, prefix="😋")
 button = Button(label="New Chat", button_type="success")
-
-# Attach the callback function to the text input widget
-text_input.on_change("value", update_div)
-button.on_click(new_chat_button)
-
 div = Div(text=f"{text_input.value}",
           width=900,
           styles={'font-size': '100%',
                   'color': '#6ed44d',
                   'font-family': 'monospace',
                   'background': '#0a0a0a'})
-
 div_Q = Div(width=350,
             styles={'font-size': '100%',
                     'color': '#6ed44d',
                     'font-family': 'monospace',
                     'background': '#0a0a0a'})
-
 div_A = Div(width=550,
             styles={'font-size': '100%',
                     'color': '#6ed44d',
                     'font-family': 'monospace',
                     'background': '#0a0a0a'})
 
+# List of callbacks
+text_input.on_change("value", update_div)
+button.on_click(new_chat_button)
+
+# Layout
 layout = column(div,
                 row(div_Q, div_A, align="start"),
                 column(text_input, button, align="start"),
                 )
+
+# Add to document
 curdoc().add_root(layout)
 curdoc().title = "openai-chatgpt-app"
