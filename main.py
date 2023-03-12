@@ -1,6 +1,6 @@
 import openai
 import logging
-from bokeh.layouts import column
+from bokeh.layouts import column, row
 from bokeh.plotting import curdoc
 from bokeh.models.widgets import TextInput, Div, Button
 
@@ -34,7 +34,9 @@ def update_div(attrname, old, new):
 
     if new != "":
         div.text += f"<br>Q: {new}"
+        div_Q.text += f"{new}"
         div.text += f"<br>A: {format_reply(reply)}"
+        div_A.text += f"{format_reply(reply)}"
         div.text += "<hr>"
         text_input.value = ""
         div.styles = {'background': '#222221'}
@@ -63,5 +65,19 @@ div = Div(text=f"{text_input.value}",
                   'font-family': 'monospace',
                   'background': '#0a0a0a'})
 
-layout = column(div, column(text_input, button, align="end"))
+div_Q = Div(width=350,
+            styles={'font-size': '100%',
+                    'color': '#6ed44d',
+                    'font-family': 'monospace',
+                    'background': '#0a0a0a'})
+
+div_A = Div(width=550,
+            styles={'font-size': '100%',
+                    'color': '#6ed44d',
+                    'font-family': 'monospace',
+                    'background': '#0a0a0a'})
+
+layout = column(div,
+                column(text_input, button, align="end"),
+                row(div_Q, div_A, align="end"))
 curdoc().add_root(layout)
