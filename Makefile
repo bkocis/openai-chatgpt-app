@@ -18,7 +18,7 @@ build:
 run_local:
 	docker run -p 8081:8081 openai-chatgpt-app
 run_app:
-	bokeh serve --show main.py --port 8081
+	bokeh serve --show ../openai-chetgpt-app --port 8081
 deploy:
 	flake8
 	pytest

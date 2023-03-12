@@ -35,7 +35,9 @@ def update_div(attrname, old, new):
     if new != "":
         div.text += f"<br>Q: {new}"
         div.text += f"<br>A: {format_reply(reply)}"
+        div.text += "<hr>"
         text_input.value = ""
+        div.styles = {'background': '#222221'}
 
 
 def clear_input_filed(attrname, old, new):
@@ -54,7 +56,12 @@ button = Button(label="New Chat", button_type="success")
 text_input.on_change("value", update_div)
 button.on_click(new_chat_button)
 
-div = Div(text=f"{text_input.value}", styles={'font-size': '100%', 'color': 'blue'})
+div = Div(text=f"{text_input.value}",
+          width=900,
+          styles={'font-size': '100%',
+                  'color': '#6ed44d',
+                  'font-family': 'monospace',
+                  'background': '#0a0a0a'})
 
 layout = column(div, column(text_input, button, align="end"))
 curdoc().add_root(layout)
