@@ -23,4 +23,4 @@ ENV PYTHONPATH /opt
 WORKDIR /opt
 EXPOSE 8082
 
-CMD ["bokeh", "serve", "openai-chatgpt-app", "--port", "8082", "--show"]
+CMD ["bokeh", "serve", "openai-chatgpt-app", "--address", "0.0.0.0", "--port", "8082", "--allow-websocket-origin=0.0.0.0:8082", "--allow-websocket-origin=balazskocsis.de", "--prefix=/openai-chatgpt-app"]
