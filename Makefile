@@ -16,13 +16,12 @@ build:
 	docker build --tag=openai-chatgpt-app --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} .
 	docker run -p 8081:8081 openai-chatgpt-app
 run_local:
-	docker run -p 8081:8081 openai-chatgpt-app
+	docker run -p 8082:8082 openai-chatgpt-app
 run_app:
-	bokeh serve --show ../openai-chetgpt-app --port 8081
+	bokeh serve --show ../openai-chetgpt-app --port 8082
 deploy:
-	flake8
-	pytest
-	docker run -dit -p 8081:8081 openai-chatgpt-app
+	docker build --tag=openai-chatgpt-app --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} .
+	docker run -dit -p 8082:8082 openai-chatgpt-app
 git_push:
 	flake8
 	pytest

@@ -20,6 +20,6 @@ RUN pip install --upgrade pip && \
 
 ENV PYTHONPATH /opt
 WORKDIR /opt
-EXPOSE 8081
+EXPOSE 8082
 
-CMD ["bokeh", "serve", "openai-chatgpt-app", "--port", "8081", "--show"]
+CMD ["bokeh", "serve", "openai-chatgpt-app", "--port", "8082", "--show"]
