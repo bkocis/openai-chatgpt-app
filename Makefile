@@ -1,3 +1,5 @@
+port=8082
+app_name=openai-chatgpt-app
 
 build:
 	flake8 --config=.flake8
@@ -13,15 +15,15 @@ build:
 	else \
 		echo "Tests failed"; \
 	fi
-	docker build --tag=openai-chatgpt-app --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} .
-	docker run -p 8081:8081 openai-chatgpt-app
+	docker build --tag=${app_name} --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} .
+	docker run -p ${port}:${port} ${app_name}
 run_local:
-	docker run -p 8082:8082 openai-chatgpt-app
+	docker run -p ${port}:${port} ${app_name}
 run_app:
-	bokeh serve --show ../openai-chetgpt-app --port 8082
+	bokeh serve --show ../${app_name} --port ${port}
 deploy:
-	docker build --tag=openai-chatgpt-app --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} .
-	docker run -dit -p 8082:8082 openai-chatgpt-app
+	docker build --tag=${app_name} --build-arg OPENAI_API_KEY=${OPENAI_API_KEY} .
+	docker run -dit -p ${port}:${port} ${app_name}
 git_push:
 	flake8
 	pytest

@@ -7,6 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN mkdir /opt/openai-chatgpt-app
 
+COPY ./static /opt/openai-chatgpt-app/static
 COPY ./templates /opt/openai-chatgpt-app/templates
 COPY ./main.py /opt/openai-chatgpt-app/main.py
 COPY ./requirements.txt /opt/openai-chatgpt-app/requirements.txt

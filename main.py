@@ -1,7 +1,7 @@
 import time
 import openai
 import logging
-from bokeh.layouts import column, row
+from bokeh.layouts import column
 from bokeh.plotting import curdoc
 from bokeh.models.widgets import TextInput, Div, Button
 
@@ -89,16 +89,16 @@ div = Div(text=f"{text_input.value}",
                   'color': '#6ed44d',
                   'font-family': 'monospace',
                   'background': '#0a0a0a'})
-div_Q = Div(width=350,
-            styles={'font-size': '100%',
-                    'color': '#6ed44d',
-                    'font-family': 'monospace',
-                    'background': '#0a0a0a'})
-div_A = Div(width=550,
-            styles={'font-size': '100%',
-                    'color': '#6ed44d',
-                    'font-family': 'monospace',
-                    'background': '#0a0a0a'})
+# div_Q = Div(width=350,
+#             styles={'font-size': '100%',
+#                     'color': '#6ed44d',
+#                     'font-family': 'monospace',
+#                     'background': '#0a0a0a'})
+# div_A = Div(width=550,
+#             styles={'font-size': '100%',
+#                     'color': '#6ed44d',
+#                     'font-family': 'monospace',
+#                     'background': '#0a0a0a'})
 
 # List of callbacks
 text_input.on_change("value", update_div)
@@ -106,7 +106,7 @@ button.on_click(new_chat_button)
 
 # Layout
 layout = column(div,
-                row(div_Q, div_A, align="start"),
+                # row(div_Q, div_A, align="start"),
                 column(text_input, button, align="start"),
                 )
 
