@@ -65,7 +65,9 @@ def update_div(attrname, old, new):
         # div_A.text += f"<br>{format_reply(reply)}"
 
         text_input.value = ""
-        div.styles = {'background': '#111111'}
+        # div.styles = {'color': '#6ed44d',
+        #               'font-family': 'monospace',
+        #               'background': '#111111'}
         div.text += f"<br>{timing}"
         div.text += "<hr>"
 
