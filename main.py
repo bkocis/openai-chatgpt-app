@@ -43,11 +43,20 @@ def call_openai(new):
     )
     chat_completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        temperature=0.4, # more deteministic
-        messages=messages
+        messages=messages,
+        temperature=0,
+        stream=True
     )
-    reply = chat_completion.choices[0].message.content
-    return reply, messages
+    # use message.content for the case of stream=False
+    # reply = chat_completion.choices[0].message.content
+    # return reply, messages
+    reply = []
+    for chunk in chat_completion:
+        if chunk is not None:
+            # print(chunk.choices[0].delta.get("content"))
+            reply.append(chunk.choices[0].delta.get("content"))
+    # print(reply)
+    return " ".join(reply[1:-1]), messages
 
 
 def update_div(attrname, old, new):
@@ -61,9 +70,7 @@ def update_div(attrname, old, new):
 
     if new != "":
         div.text += f"<br>Q{message_count}: {new}"
-        # div_Q.text += f"<br>{new}"
         div.text += f"<br><dd>{format_reply(reply)}</dd>"
-        # div_A.text += f"<br>{format_reply(reply)}"
 
         text_input.value = ""
         # div.styles = {'color': '#6ed44d',
@@ -71,6 +78,44 @@ def update_div(attrname, old, new):
         #               'background': '#111111'}
         div.text += f"<br>{timing}"
         div.text += "<hr>"
+
+
+def stream_div(attrname, old, new):
+    messages.append(
+        {"role": "user", "content": new},
+    )
+    chat_completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=messages,
+        temperature=0,
+        stream=True
+    )
+    # reply = []
+    for chunk in chat_completion:
+        if chunk is not None:
+            div.text += f'{(chunk.choices[0].delta.get("content"))}'
+            # reply.append(chunk.choices[0].delta.get("content"))
+    # print(reply)
+    # return " ".join(reply[1:-1]), messages
+
+    # logging.info(f"A: {reply}")
+    # print(f"A: {reply}")
+    # message_count = message_counter(messages)
+
+    # messages.append({"role": "assistant", "content": reply})
+
+    # if new != "":
+    #     # div.text += f"<br>Q{message_count}: {new}"
+    #     # div_Q.text += f"<br>{new}"
+    #     div.text += f"<br><dd>{format_reply(reply)}</dd>"
+    #     # div_A.text += f"<br>{format_reply(reply)}"
+    #
+    #     text_input.value = ""
+    #     # div.styles = {'color': '#6ed44d',
+    #     #               'font-family': 'monospace',
+    #     #               'background': '#111111'}
+    #     #div.text += f"<br>{timing}"
+    #     div.text += "<hr>"
 
 
 def clear_input_filed(attrname, old, new):
@@ -92,27 +137,19 @@ div = Div(text=f"{text_input.value}",
                   'color': '#6ed44d',
                   'font-family': 'monospace',
                   'background': '#0a0a0a'})
-# div_Q = Div(width=350,
-#             styles={'font-size': '100%',
-#                     'color': '#6ed44d',
-#                     'font-family': 'monospace',
-#                     'background': '#0a0a0a'})
-# div_A = Div(width=550,
-#             styles={'font-size': '100%',
-#                     'color': '#6ed44d',
-#                     'font-family': 'monospace',
-#                     'background': '#0a0a0a'})
 
 # List of callbacks
-text_input.on_change("value", update_div)
+# text_input.on_change("value", update_div)
+text_input.on_change("value", stream_div)
 button.on_click(new_chat_button)
 
 # Layout
 layout = column(div,
-                # row(div_Q, div_A, align="start"),
                 column(text_input, button, align="start"),
                 )
 
 # Add to document
 curdoc().add_root(layout)
+curdoc().add_periodic_callback(stream_div, 1000)
+# curdoc().add_periodic_callback(update_div, 1000)
 curdoc().title = "openai-chatgpt-app"
