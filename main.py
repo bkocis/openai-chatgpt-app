@@ -1,7 +1,7 @@
 import time
 import openai
 import logging
-from bokeh.layouts import column
+from bokeh.layouts import column, row
 from bokeh.plotting import curdoc
 from bokeh.models.widgets import TextInput, Div, Button
 
@@ -80,9 +80,9 @@ def update_div(attrname, old, new):
         div.text += "<hr>"
 
 
-def stream_div(attrname, old, new):
+def stream_div():
     messages.append(
-        {"role": "user", "content": new},
+        {"role": "user", "content": text_input.value},
     )
     chat_completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
@@ -128,9 +128,16 @@ def new_chat_button():
     div.text = ""
 
 
+def take_the_text_input():
+    print(text_input.value)
+    # stream_div("value", "", text_input.value)
+    update_div("value", "", text_input.value)
+
+
 # List of widgets
 text_input = TextInput(width=900, prefix="😋")
 button = Button(label="New Chat", button_type="success")
+enter_button = Button(label="Enter", button_type="success")
 div = Div(text=f"{text_input.value}",
           width=900,
           styles={'font-size': '100%',
@@ -139,17 +146,18 @@ div = Div(text=f"{text_input.value}",
                   'background': '#0a0a0a'})
 
 # List of callbacks
-# text_input.on_change("value", update_div)
-text_input.on_change("value", stream_div)
+text_input.on_change("value", update_div)
+# text_input.on_change("value", stream_div)
 button.on_click(new_chat_button)
+enter_button.on_click(take_the_text_input)
 
 # Layout
 layout = column(div,
-                column(text_input, button, align="start"),
+                column(row(text_input, enter_button), button, align="start"),
                 )
 
 # Add to document
 curdoc().add_root(layout)
-curdoc().add_periodic_callback(stream_div, 1000)
+# curdoc().add_periodic_callback(stream_div, 1000)
 # curdoc().add_periodic_callback(update_div, 1000)
 curdoc().title = "openai-chatgpt-app"
